@@ -122,10 +122,10 @@ function GetWordClouds(product_id) {
             }
         }
         //console.log(wcResponse);
-        //console.log(topics_ar_dct);
-        drawWordCloud(topics_ar_dct, 650, 75, "cloudOverall");
-        drawWordCloud(topics_ar_dct, 375, 300, "cloudPositive");
-        drawWordCloud(topics_ar_dct, 375, 300, "cloudNegative");
+        //console.log(topics_overall_dct);
+        drawWordCloud(topics_overall_dct, 650, 75, "cloudOverall");
+        drawWordCloud(topics_overall_dct, 375, 300, "cloudPositive");
+        drawWordCloud(topics_overall_dct, 375, 300, "cloudNegative");
     }
 }
 
