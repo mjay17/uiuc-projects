@@ -1,4 +1,5 @@
 var product_sentiments_aggregated_overall, product_sentiments_aggregated_dates;
+var overall_word_cloud, positive_word_cloud, negative_word_cloud;
 var last_product_title;
 
 function loadProductsAndSentimentsFull() {
@@ -16,6 +17,11 @@ function loadProductsAndSentimentsFull() {
         // Parsing JSON string into object
         product_sentiments_aggregated_dates = JSON.parse(response);
     }, '../data/product_sentiments_aggregated_dates.json');
+
+    loadJSON(function (response) {
+        // Parsing JSON string into object
+        overall_word_cloud = JSON.parse(response);
+    }, '../data/topic_models.json');
 }
 
 function loadProductsAndOverallSentiments() {
@@ -50,6 +56,7 @@ function showAnalytics(product_title) {
 
             var product_dates_details = getProductSentimentDetailsByDate(product_id);
             plotBarChart(product_dates_details);
+            GetWordClouds(product_title);
 
             last_product_title = product_title;
         }
@@ -91,15 +98,35 @@ function getSentimentCategory(sentiment_score) {
         return "<span>Neutral</span>";
     }
     else if (sentiment_score > 1 && sentiment_score <= 2) {
-        return "<span style='color:#00e600'>Positive</span>";
+        return "<span style='color:#66ff66'>Positive</span>";
     }
     else if (sentiment_score > 2 && sentiment_score <= 3) {
-        return "<span style='color:#006600'>Very Positive</span>";
+        return "<span style='color:#00cc00'>Very Positive</span>";
     }
 }
 
 function convertToFixedDecimalPlaces(num) {
     return num.toFixed(2);
+}
+
+function GetWordClouds(product_id) {
+    if (product_id) {
+        // Get data for the productId of interest
+        wcResponse = overall_word_cloud.filter(function (data) { return data.product_id == 'B00004XOYC' });
+        var topics_overall_dct = []
+        if (wcResponse && wcResponse.length > 0) {
+            var topics = wcResponse[0]['Overall_Topics']
+            for (var i = 0; i < topics.length; i++) {
+                var topic_transform = { text: topics[i][0], weight: Math.round(parseFloat(topics[i][1]) * 100, 2) };
+                topics_overall_dct.push(topic_transform);
+            }
+        }
+        //console.log(wcResponse);
+        //console.log(topics_ar_dct);
+        drawWordCloud(topics_ar_dct, 650, 75, "cloudOverall");
+        drawWordCloud(topics_ar_dct, 375, 300, "cloudPositive");
+        drawWordCloud(topics_ar_dct, 375, 300, "cloudNegative");
+    }
 }
 
 function autocomplete(inp, arr) {
@@ -205,7 +232,7 @@ function plotBarChart(product_data) {
     const svgContainer = d3.select('#container');
 
     const margin = 100;
-    const width = 900 - 2 * margin;
+    const width = 950 - 2 * margin;
     const height = 400 - 2 * margin;
 
     const chart = svg.append('g')
@@ -415,4 +442,61 @@ function showProducts() {
     var tablediv = document.getElementById('product_details');
     tablediv.innerHTML = "";
     tablediv.appendChild(table);
+}
+
+function drawWordCloud(wordsToDraw, w, h, divId) {
+    var width = w;
+    var height = h;
+    var fill = d3.scaleOrdinal(d3.schemeCategory10);
+
+    d3.layout.cloud()
+        .size([width, height])
+        .words(wordsToDraw)
+        .rotate(function () {
+            return ~~(Math.random() * 2) * 90;
+        })
+        .font("Impact")
+        .fontSize(function (d) {
+            return d.weight;
+        })
+        .on("end", drawCloud)
+        .start();
+
+    function drawCloud(words) {
+        d3.select("#" + divId).append("svg")
+            .attr("width", width)
+            .attr("height", height)
+            .append("g")
+            .attr("transform", "translate(" + ~~(width / 2) + "," + ~~(height / 2) + ")")
+            .selectAll("text")
+            .data(words)
+            .enter().append("text")
+            .style("font-size", function (d) {
+                return d.weight + "px";
+            })
+            .style("-webkit-touch-callout", "none")
+            .style("-webkit-user-select", "none")
+            .style("-khtml-user-select", "none")
+            .style("-moz-user-select", "none")
+            .style("-ms-user-select", "none")
+            .style("user-select", "none")
+            .style("cursor", "default")
+            .style("font-family", "Impact")
+            .style("fill", function (d, i) {
+                return fill(i);
+            })
+            .attr("text-anchor", "middle")
+            .attr("transform", function (d) {
+                return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
+            })
+            .text(function (d) {
+                return d.text;
+            });
+    }
+
+    // set the viewbox to content bounding box (zooming in on the content, effectively trimming whitespace)
+    var svg = document.getElementsByTagName("svg")[0];
+    var bbox = svg.getBBox();
+    var viewBox = [bbox.x, bbox.y, bbox.width, bbox.height].join(" ");
+    svg.setAttribute("viewBox", viewBox);
 }

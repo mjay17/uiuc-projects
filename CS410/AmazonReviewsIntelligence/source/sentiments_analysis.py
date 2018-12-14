@@ -15,10 +15,11 @@ from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 
 def load_dataset():
     # this is the dataset downloaded from AMZN directly.
-    mobile_electronics_review_file = '../data/amazon_reviews_us_Mobile_Electronics_v1_00.tsv.gz'
+    mobile_electronics_review_file = '../data/amazon_reviews_us_Electronics_v1_00.tsv'
     df_me = pd.read_table(mobile_electronics_review_file, error_bad_lines=False)
     #df_me.head()
     print(list(df_me))
+    df_me = df_me[df_me['product_id'] != 'B003L1ZYYM']
     #print(mod_df.sort_values(by=['product_id'])[1:10])
     return df_me
 
@@ -47,7 +48,8 @@ def generate_sentiment_score(df_me):
     #grouped_product_id = df_me_small.sort_values(by=['product_id']).groupby('product_id').filter(lambda x: len(x) >= 10)
     # This is full dataset
     # Removing products with less than 10 reviews (Sort, Group then Filter)
-    grouped_product_id = df_me.sort_values(by=['product_id']).groupby('product_id').filter(lambda x: len(x) >= 10)
+    grouped_product_id = df_me.sort_values(by=['product_id']).groupby('product_id').filter(lambda x: len(x) >= 10 & len(x) < 5000)
+    print(grouped_product_id.shape)
     #print(grouped_product_id)
     
     df_vs = pd.DataFrame()
