@@ -2,6 +2,11 @@ var product_sentiments_aggregated_overall, product_sentiments_aggregated_dates;
 var overall_word_cloud, positive_word_cloud, negative_word_cloud;
 var last_product_title;
 
+//test data
+//product_sentiments_aggregated_overall = [{"product_id":"B00004XOYC","product_title":"Rand McNally TND 720 LM IntelliRoute Truck GPS with Lifetime Maps (Certified Refurbished)","overall_weighted_sentiment_score":0.27},{"product_id":"0594012015","product_title":"Barnes & Noble NOOK Power Kit in Carbon BNADPN31","overall_weighted_sentiment_score":0.28}];
+//product_sentiments_aggregated_dates = [{"product_id":"B00004XOYC","product_title":"Rand McNally TND 720 LM IntelliRoute Truck GPS with Lifetime Maps (Certified Refurbished)","review_date":"2015-06-14","aggr_weighted_sentiment_score":0.84},{"product_id":"B00004XOYC","product_title":"Rand McNally TND 720 LM IntelliRoute Truck GPS with Lifetime Maps (Certified Refurbished)","review_date":"2015-06-18","aggr_weighted_sentiment_score":0.0},{"product_id":"B00004XOYC","product_title":"Rand McNally TND 720 LM IntelliRoute Truck GPS with Lifetime Maps (Certified Refurbished)","review_date":"2015-06-22","aggr_weighted_sentiment_score":-1.67},{"product_id":"B00004XOYC","product_title":"Rand McNally TND 720 LM IntelliRoute Truck GPS with Lifetime Maps (Certified Refurbished)","review_date":"2015-06-23","aggr_weighted_sentiment_score":1.06},{"product_id":"0594012015","product_title":"Barnes & Noble NOOK Power Kit in Carbon BNADPN31","review_date":"2013-07-16","aggr_weighted_sentiment_score":1.93},{"product_id":"0594012015","product_title":"Barnes & Noble NOOK Power Kit in Carbon BNADPN31","review_date":"2013-07-18","aggr_weighted_sentiment_score":-1.75},{"product_id":"0594012015","product_title":"Barnes & Noble NOOK Power Kit in Carbon BNADPN31","review_date":"2013-07-20","aggr_weighted_sentiment_score":1.74},{"product_id":"0594012015","product_title":"Barnes & Noble NOOK Power Kit in Carbon BNADPN31","review_date":"2013-07-23","aggr_weighted_sentiment_score":0.07}];
+//overall_word_cloud = [{"product_id":"B00004X10A","Overall_Topics":[["lenses",0.049588941],["bag",0.0430502631],["L",0.0231964365],["fits",0.023176698],["size",0.0231431946],["The",0.0231355429],["Tamrac",0.0166043956],["facing",0.0165806692],["website",0.0165798366],["accurate",0.0165785812]]},{"product_id":"B00004XOYC","Overall_Topics":[["press",0.0943373889],["delicately",0.0566219389],["pinch",0.0566209294],["buttons",0.0566152111],["hand",0.0566151924],["I",0.0566110797],["thing",0.0566099398],["came",0.0566084348],["world",0.0566065237],["changed",0.0566031374]]}];
+
 function loadProductsAndSentimentsFull() {
     loadJSON(function (response) {
         // Parsing JSON string into object
@@ -123,9 +128,9 @@ function GetWordClouds(product_id) {
         }
         //console.log(wcResponse);
         //console.log(topics_overall_dct);
-        drawWordCloud(topics_overall_dct, 650, 75, "cloudOverall");
-        drawWordCloud(topics_overall_dct, 375, 300, "cloudPositive");
-        drawWordCloud(topics_overall_dct, 375, 300, "cloudNegative");
+        drawWordCloud(topics_overall_dct, 650, 75, "svg2");
+        drawWordCloud(topics_overall_dct, 375, 300, "svg3");
+        drawWordCloud(topics_overall_dct, 375, 300, "svg4");
     }
 }
 
@@ -227,9 +232,9 @@ function autocomplete(inp, arr) {
 }
 
 function plotBarChart(product_data) {
-    const svg = d3.select('svg');
+    const svg = d3.select('#svg1');
     svg.selectAll("*").remove();
-    const svgContainer = d3.select('#container');
+    //const svgContainer = d3.select('#container');
 
     const margin = 100;
     const width = 950 - 2 * margin;
@@ -444,7 +449,7 @@ function showProducts() {
     tablediv.appendChild(table);
 }
 
-function drawWordCloud(wordsToDraw, w, h, divId) {
+function drawWordCloud(wordsToDraw, w, h, svgId) {
     var width = w;
     var height = h;
     var fill = d3.scaleOrdinal(d3.schemeCategory10);
@@ -463,8 +468,10 @@ function drawWordCloud(wordsToDraw, w, h, divId) {
         .start();
 
     function drawCloud(words) {
-        d3.select("#" + divId).append("svg")
-            .attr("width", width)
+        const svg = d3.select("#" + svgId);
+        svg.selectAll("*").remove();
+
+            svg.attr("width", width)
             .attr("height", height)
             .append("g")
             .attr("transform", "translate(" + ~~(width / 2) + "," + ~~(height / 2) + ")")
@@ -495,7 +502,7 @@ function drawWordCloud(wordsToDraw, w, h, divId) {
     }
 
     // set the viewbox to content bounding box (zooming in on the content, effectively trimming whitespace)
-    var svg = document.getElementsByTagName("svg")[0];
+    var svg = document.getElementById(svgId);
     var bbox = svg.getBBox();
     var viewBox = [bbox.x, bbox.y, bbox.width, bbox.height].join(" ");
     svg.setAttribute("viewBox", viewBox);
