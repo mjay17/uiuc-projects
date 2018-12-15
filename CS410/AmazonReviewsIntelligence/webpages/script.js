@@ -288,7 +288,7 @@ function plotBarChart(product_data) {
 
     chart.append('g')
         .attr('transform', `translate(0, ${height})`)
-        .call(d3.axisBottom(xScale))
+        .call(d3.axisBottom(xScale).ticks(20))
         .selectAll("text")
         .style("text-anchor", "end")
         .attr("dx", "-.8em")
