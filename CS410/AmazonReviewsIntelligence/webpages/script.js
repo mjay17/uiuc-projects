@@ -118,7 +118,7 @@ function convertToFixedDecimalPlaces(num) {
 function GetWordClouds(product_id) {
     if (product_id) {
         // Get data for the productId of interest
-        wcResponse = overall_word_cloud.filter(function (data) { return data.product_id == 'B00004XOYC' });
+        wcResponse = overall_word_cloud.filter(function (data) { return data.product_id == 'B00001P4XA' });
         var topics_overall_dct = []
         if (wcResponse && wcResponse.length > 0) {
             var topics = wcResponse[0]['Overall_Topics']
