@@ -127,15 +127,15 @@ function GetWordClouds(product_id) {
             for (var i = 0; i < topics.length; i++) {
                 //var topic_transform = { text: topics[i][0], weight: Math.round(parseFloat(topics[i][1]) * 300, 2) };
                 //var topic_transform = { text: topics[i][0], size: Math.floor(topics[i][1] * 250) };
-                var topic_transform = { text: topics[i][0], size: mapScale(topics[i][1], in_min, in_max, 10, 100) };
+                var topic_transform = { text: topics[i][0], size: mapScale(topics[i][1], in_min, in_max, 10, 60) };
                 topics_overall_dct.push(topic_transform);
             }
         }
         //console.log(wcResponse);
         //console.log(topics_overall_dct);
         drawWordCloud(topics_overall_dct, 500, 75, "cloudOverall");
-        drawWordCloud(topics_overall_dct, 375, 200, "cloudPositive");
-        drawWordCloud(topics_overall_dct, 375, 200, "cloudNegative");
+        drawWordCloud(topics_overall_dct, 375, 300, "cloudPositive");
+        drawWordCloud(topics_overall_dct, 375, 300, "cloudNegative");
     }
 }
 
