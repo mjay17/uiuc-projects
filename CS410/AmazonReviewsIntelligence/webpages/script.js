@@ -122,9 +122,12 @@ function GetWordClouds(product_id) {
         var topics_overall_dct = []
         if (wcResponse && wcResponse.length > 0) {
             var topics = wcResponse[0]['Overall_Topics']
+            var in_min = Math.min.apply(null, topics.map(d => d[1]));
+            var in_max = Math.max.apply(null, topics.map(d => d[1]));
             for (var i = 0; i < topics.length; i++) {
                 //var topic_transform = { text: topics[i][0], weight: Math.round(parseFloat(topics[i][1]) * 300, 2) };
-                var topic_transform = { text: topics[i][0], size: Math.floor(topics[i][1] * 250) };
+                //var topic_transform = { text: topics[i][0], size: Math.floor(topics[i][1] * 250) };
+                var topic_transform = { text: topics[i][0], size: mapScale(topics[i][1], in_min, in_max, 10, 100) };
                 topics_overall_dct.push(topic_transform);
             }
         }
@@ -134,6 +137,10 @@ function GetWordClouds(product_id) {
         drawWordCloud(topics_overall_dct, 375, 200, "cloudPositive");
         drawWordCloud(topics_overall_dct, 375, 200, "cloudNegative");
     }
+}
+
+function mapScale(num, in_min, in_max, out_min, out_max) {
+        return (num - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
 }
 
 function autocomplete(inp, arr) {
