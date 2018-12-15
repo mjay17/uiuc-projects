@@ -124,7 +124,7 @@ function GetWordClouds(product_id) {
             var topics = wcResponse[0]['Overall_Topics']
             for (var i = 0; i < topics.length; i++) {
                 //var topic_transform = { text: topics[i][0], weight: Math.round(parseFloat(topics[i][1]) * 300, 2) };
-                var topic_transform = { text: topics[i][0], size: Math.floor(topics[i][1] * 1000) };
+                var topic_transform = { text: topics[i][0], size: Math.floor(topics[i][1] * 250) };
                 topics_overall_dct.push(topic_transform);
             }
         }
