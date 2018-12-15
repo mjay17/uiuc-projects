@@ -27,7 +27,17 @@ function loadProductsAndSentimentsFull() {
     loadJSON(function (response) {
         // Parsing JSON string into object
         overall_word_cloud = JSON.parse(response);
-    }, '../data/topic_models-21K.json');
+    }, '../data/topics_models_overall.json');
+
+    loadJSON(function (response) {
+        // Parsing JSON string into object
+        positive_word_cloud = JSON.parse(response);
+    }, '../data/topics_models_positive.json');
+
+    loadJSON(function (response) {
+        // Parsing JSON string into object
+        negative_word_cloud = JSON.parse(response);
+    }, '../data/topics_models_negative.json');
 }
 
 function loadProductsAndOverallSentiments() {
@@ -117,25 +127,33 @@ function convertToFixedDecimalPlaces(num) {
 
 function GetWordClouds(product_id) {
     if (product_id) {
+        ProcessAndDrawWordCloud(overall_word_cloud, product_id, 500, 75, "cloudOverall");
+        ProcessAndDrawWordCloud(positive_word_cloud, product_id, 375, 300, "cloudPositive");
+        ProcessAndDrawWordCloud(negative_word_cloud, product_id, 375, 300, "cloudNegative");
+    }
+}
+
+function ProcessAndDrawWordCloud(word_cloud, product_id, w_wordcloud, h_wordcloud, div_wordcloud) {
+    if (word_cloud && product_id) {
         // Get data for the productId of interest
-        wcResponse = overall_word_cloud.filter(function (data) { return data.product_id == 'B00001P4XA' });
-        var topics_overall_dct = []
+        wcResponse = word_cloud.filter(function (data) { return data.product_id == product_id });
+        var topics_dct = []
         if (wcResponse && wcResponse.length > 0) {
-            var topics = wcResponse[0]['Overall_Topics']
+            var topics = wcResponse[0]['topics']
             var in_min = Math.min.apply(null, topics.map(d => d[1]));
             var in_max = Math.max.apply(null, topics.map(d => d[1]));
             for (var i = 0; i < topics.length; i++) {
                 //var topic_transform = { text: topics[i][0], weight: Math.round(parseFloat(topics[i][1]) * 300, 2) };
-                //var topic_transform = { text: topics[i][0], size: Math.floor(topics[i][1] * 250) };
                 var topic_transform = { text: topics[i][0], size: mapScale(topics[i][1], in_min, in_max, 10, 60) };
-                topics_overall_dct.push(topic_transform);
+                topics_dct.push(topic_transform);
             }
         }
         //console.log(wcResponse);
-        //console.log(topics_overall_dct);
-        drawWordCloud(topics_overall_dct, 500, 75, "cloudOverall");
-        drawWordCloud(topics_overall_dct, 375, 300, "cloudPositive");
-        drawWordCloud(topics_overall_dct, 375, 300, "cloudNegative");
+        //console.log(topics_dct);
+        //drawWordCloud(topics_overall_dct, 500, 75, "cloudOverall");
+        //drawWordCloud(topics_overall_dct, 375, 300, "cloudPositive");
+        //drawWordCloud(topics_overall_dct, 375, 300, "cloudNegative");
+        drawWordCloud(topics_dct, w_wordcloud, h_wordcloud, div_wordcloud);
     }
 }
 
