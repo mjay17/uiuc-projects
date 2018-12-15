@@ -72,7 +72,7 @@ function showAnalytics(product_title) {
 
             var product_dates_details = getProductSentimentDetailsByDate(product_id);
             plotBarChart(product_dates_details);
-            GetWordClouds(product_title);
+            GetWordClouds(product_id);
 
             last_product_title = product_title;
         }
