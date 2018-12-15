@@ -201,7 +201,6 @@
                 <div>
                     <label>Overall Sentiments Word Cloud: </label>
                     <div id="cloudOverall">
-                        <svg id="svg2"></svg>
                     </div>
                 </div>
             </div>
@@ -221,8 +220,8 @@
             <!-- Positive Word Cloud Here -->
             <div class="div-left">
                 <label>Positive Sentiments Word Cloud: </label>
+                <br>
                 <div id="cloudPositive">
-                    <svg id="svg3"></svg>
                 </div>
             </div>
             <br>
@@ -231,8 +230,8 @@
             <!-- Negative Word Cloud Here -->
             <div class="div-left">
                 <label>Negative Sentiments Word Cloud: </label>
+                <br>
                 <div id="cloudNegative">
-                    <svg id="svg4"></svg>
                 </div>
             </div>
         </div>
@@ -240,24 +239,21 @@
 
     <script type="text/javascript">
         var skillsToDraw = [
-            { text: 'javascript', size: 40 },
-            { text: 'D3.js', size: 15 },
-            { text: 'coffeescript', size: 25 },
-            { text: 'shaving sheep', size: 25 },
-            { text: 'AngularJS', size: 30 },
-            { text: 'Ruby', size: 30 },
-            { text: 'ECMAScript', size: 15 },
-            { text: 'Actionscript', size: 10 },
-            { text: 'Linux', size: 20 },
-            { text: 'C++', size: 20 },
-            { text: 'C#', size: 25 },
-            { text: 'JAVA', size: 38 },
+            { text: 'javascript', weight: 40 },
+            { text: 'D3.js', weight: 15 },
+            { text: 'coffeescript', weight: 25 },
+            { text: 'shaving sheep', weight: 25 },
+            { text: 'AngularJS', weight: 30 },
+            { text: 'Ruby', weight: 30 },
+            { text: 'ECMAScript', weight: 15 },
+            { text: 'Actionscript', weight: 10 },
+            { text: 'Linux', weight: 20 },
+            { text: 'C++', weight: 20 },
+            { text: 'C#', weight: 25 },
+            { text: 'JAVA', weight: 38 },
         ];
-        //var width = 500;
-        //var height = 100;
-        //drawWordCloud(skillsToDraw, 650, 75, "cloudOverall");
-        //drawWordCloud(skillsToDraw, 375, 300, "cloudPositive");
-        //drawWordCloud(skillsToDraw, 375, 300, "cloudNegative");
+        skillsToDraw = [{text: "lenses", size: 0.049588941*1000},{text: "bag", size: 0.0430502631*1000},{text: "Long", size: 0.0231964365*1000},{text: "fits", size: 0.023176698*1000}];
+
     </script>
 </body>
 
