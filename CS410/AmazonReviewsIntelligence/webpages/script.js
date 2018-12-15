@@ -27,7 +27,7 @@ function loadProductsAndSentimentsFull() {
     loadJSON(function (response) {
         // Parsing JSON string into object
         overall_word_cloud = JSON.parse(response);
-    }, '../data/topic_models.json');
+    }, '../data/topic_models-21K.json');
 }
 
 function loadProductsAndOverallSentiments() {
