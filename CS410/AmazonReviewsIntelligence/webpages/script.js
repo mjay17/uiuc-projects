@@ -105,19 +105,19 @@ function getProductSentimentDetailsByDate(product_id) {
 
 function getSentimentCategory(sentiment_score) {
     if (sentiment_score >= -3 && sentiment_score < -2) {
-        return "<span style='color:#cc0000'>Very Negative</span>";
+        return "<span style='background-color:#2F4A6D;color:#cc0000'> Very Negative </span>";
     }
     else if (sentiment_score >= -2 && sentiment_score < -1) {
-        return "<span style='color:#ff6666'>Negative</span>";
+        return "<span style='background-color:#2F4A6D;color:#ff6666'> Negative </span>";
     }
     else if (sentiment_score >= -1 && sentiment_score <= 1) {
-        return "<span>Neutral</span>";
+        return "<span style='background-color:#2F4A6D;color:#f0ec0b'> Neutral </span>";
     }
     else if (sentiment_score > 1 && sentiment_score <= 2) {
-        return "<span style='color:#66ff66'>Positive</span>";
+        return "<span style='background-color:#2F4A6D;color:#66ff66'> Positive </span>";
     }
     else if (sentiment_score > 2 && sentiment_score <= 3) {
-        return "<span style='color:#00cc00'>Very Positive</span>";
+        return "<span style='background-color:#2F4A6D;color:#00cc00'> Very Positive </span>";
     }
 }
 
@@ -288,7 +288,7 @@ function plotBarChart(product_data) {
 
     chart.append('g')
         .attr('transform', `translate(0, ${height})`)
-        .call(d3.axisBottom(xScale).ticks(20))
+        .call(d3.axisBottom(xScale).tickValues(xScale.domain().filter(function(d,i){ return !(i%10)})))
         .selectAll("text")
         .style("text-anchor", "end")
         .attr("dx", "-.8em")
@@ -324,7 +324,14 @@ function plotBarChart(product_data) {
 
     barGroups
         .append('rect')
-        .attr('class', 'bar')
+        .attr('class', function(d) {
+            if (d.aggr_weighted_sentiment_score < -1) {
+              return 'barNeg';
+            } else if (d.aggr_weighted_sentiment_score > 1) {
+              return 'barPos';
+            }
+            return 'bar';
+          })
         .attr('x', (g) => xScale(g.review_date))
         .attr('y', (g) => yScale(g.aggr_weighted_sentiment_score))
         .attr('height', (g) => height - yScale(g.aggr_weighted_sentiment_score))
@@ -355,7 +362,7 @@ function plotBarChart(product_data) {
                 .attr('y', (a) => yScale(a.aggr_weighted_sentiment_score) + 30)
                 .attr('fill', 'white')
                 .attr('text-anchor', 'middle')
-                .text((a, idx) => {
+                /*.text((a, idx) => {
                     const divergence = (a.aggr_weighted_sentiment_score - actual.aggr_weighted_sentiment_score).toFixed(2)
 
                     let text = ''
@@ -363,7 +370,7 @@ function plotBarChart(product_data) {
                     text += `${divergence}`
 
                     return idx !== i ? text : '';
-                })
+                })*/
 
         })
         .on('mouseleave', function () {
@@ -387,7 +394,7 @@ function plotBarChart(product_data) {
         .attr('x', (a) => xScale(a.review_date) + xScale.bandwidth() / 2)
         .attr('y', (a) => yScale(a.aggr_weighted_sentiment_score) + 30)
         .attr('text-anchor', 'middle')
-        .text((a) => `${a.aggr_weighted_sentiment_score}`)
+        //.text((a) => `${a.aggr_weighted_sentiment_score}`)
 
     svg
         .append('text')
